@@ -1,0 +1,122 @@
+chapter 10 R LAb
+Principal component analysis
+```{r}
+states=row.names(USArrests)
+states
+names(USArrests)
+#find the mean and var of various columns of the table
+#apply function is used to apply function to raws or columns
+#1 indicates raws and 2 indicates columns
+apply(USArrests, 2, mean)
+apply(USArrests, 2, var)
+#apply PCA using prcomp
+pr.out=prcomp(USArrests, scale=TRUE)
+names(pr.out)
+#center corresponds to  mean and scale corresponds to std deviation
+#sedv == variance captured
+pr.out$center
+pr.out$scale
+pr.out$rotation
+pr.out$sdev
+dim(pr.out$x)
+
+#plotting
+biplot(pr.out, scale=0)
+pr.out$rotation=-pr.out$rotation
+pr.out$x=-pr.out$x
+biplot(pr.out, scale=0)
+#scree analysis
+pr.out$sdev
+#pve by each component
+pr.var=pr.out$sdev^2
+pr.var
+
+pve=pr.var/sum(pr.var)
+pve
+#scree plot
+plot(pve, xlab="Principal Component", ylab="Proportion of Variance Explained", ylim=c(0,1),type='b')
+#pareto plot
+plot(cumsum(pve), xlab="Principal Component", ylab="Cumulative Proportion of Variance Explained", ylim=c(0,1),type='b')
+#cusum
+a=c(1,2,8,-3)
+cumsum(a)
+
+```
+K-means Clustering
+```{r}
+#kmeans() perform k means clustering
+##data generation
+set.seed(2)
+x=matrix(rnorm(50*2), ncol=2)  #50 obs, 2 variables
+x[1:25,1]=x[1:25,1]+3    ##add a mean shift to x1???_1
+x[1:25,2]=x[1:25,2]-4    ##add a mean shift to x2
+#plot(x)
+km.out=kmeans(x,2,nstart=20)#kmeans
+km.out$cluster#cluster assignment of each obs
+
+plot(x, col=(km.out$cluster+2), main="K-Means Clustering Results with K=2", xlab="", ylab="", pch=20, cex=3)#
+
+
+plot(x, col=(km.out$cluster), main="K-Means Clustering Results with K=2", xlab="", ylab="", pch=15, cex=2)#
+
+
+##Track (between_SS / total_SS)
+set.seed(4)#
+km.out=kmeans(x,3,nstart=20)#
+km.out#
+
+
+#runing multiple times and runing single times
+#both time comparing the results
+set.seed(3)#
+
+km.out=kmeans(x,3,nstart=1)#
+km.out$tot.withinss#
+
+km.out=kmeans(x,3,nstart=20)#
+km.out$tot.withinss#
+# tot.withinss give total variance within each cluster
+# withnss gives individual sum of squares
+#2
+
+```
+Hierarchical clustering
+```{r}
+##data generation
+set.seed(2)
+x=matrix(rnorm(50*2), ncol=2)  #50 obs, 2 variables
+x[1:25,1]=x[1:25,1]+3    ##add a mean shift to x1
+x[1:25,2]=x[1:25,2]-4    ##add a mean shift to x2
+plot(x)
+hc.complete=hclust(dist(x), method="complete")
+hc.average=hclust(dist(x), method="average")
+hc.single=hclust(dist(x), method="single")
+
+par(mfrow=c(1,3))
+plot(hc.complete,main="Complete Linkage", xlab="", sub="", cex=.9)
+plot(hc.average, main="Average Linkage", xlab="", sub="", cex=.9)
+plot(hc.single, main="Single Linkage", xlab="", sub="", cex=.9)
+
+##Specify number of clusters
+cutree(hc.complete, 2)
+cutree(hc.average, 2)
+cutree(hc.single, 2)
+cutree(hc.single, 4)
+
+##effect of scaling
+xsc=scale(x)
+plot(hclust(dist(xsc), method="complete"), main="Hierarchical Clustering with Scaled Features")
+
+##using different distance functions
+##need 3 or more features to compute correlations
+#we can use as.dist() function to specify correlational based distance
+#but this works only for features more than 2(i.e.=>3)
+
+x=matrix(rnorm(30*3), ncol=3)
+dd=as.dist(1-cor(t(x)))
+plot(hclust(dd, method="complete"), main="Complete Linkage with Correlation-Based Distance", xlab="", sub="")
+
+
+
+
+```
