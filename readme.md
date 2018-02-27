@@ -4,6 +4,9 @@ Statistical Learning refers to a set of tools for modeling and understanding com
 These codes are from book ISLR and their exercise.
 Play with it at your will.
 
+
+![](https://media.giphy.com/media/o6cgfqc9U60bC/giphy.gif)
+
 ## Chapters from ISLR and corresponding codes
 
 1.  Introduction
@@ -16,6 +19,8 @@ Play with it at your will.
 1.   Tree - Based Methods - (cart_bagging.R, tree.R, tree_book.R)
 1.  Support Vector Machines - (svc.R)
 1.  Unsupervised Learning - (unsupervised.Rmd, pca.R)
+
+
 
 
 ## Future Goals
